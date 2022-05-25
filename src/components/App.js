@@ -17,7 +17,6 @@ export default function App() {
         const promise = new Promise((resolve) => {
             setTimeout(() => {
                 setActiveId(ids[Math.floor(Math.random() * 4)]);
-                resolve();
             }, 1000);
             setTimeout(() => {
                 setActiveId('');

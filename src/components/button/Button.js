@@ -2,13 +2,11 @@ import React, {useEffect, useState} from 'react';
 import cn from 'classnames';
 import './button.css';
 import useSound from "use-sound";
-import aSound from '../../sounds/a.mp3';
-import bSound from '../../sounds/b.mp3';
-import cSound from '../../sounds/c.mp3';
-import dSound from '../../sounds/d.mp3';
 
-export default function Button({ id = '', isActive = false, setAnswer, isDisabled }) {
+
+export default function Button({ id = '', isActive = false, setAnswer, isDisabled, soundFile }) {
     const [isPressed, setPressed] = useState(false);
+    const [aSound,bSound,cSound,dSound] = soundFile;
     const [ a ] = useSound(aSound);
     const [ b ] = useSound(bSound);
     const [ c ] = useSound(cSound);

@@ -10,23 +10,24 @@ export default function App() {
     const [ sequence, setSequence ] = useState('');
     const [ answer, setAnswer ] = useState('');
     const [isDisabled, setDisabled] = useState(false);
+    const [soundFile, setSoundFile] = useState(null);
+    const [soundFileIsLoaded, setSoundFileIsLoaded] = useState(false);
     const navigate = useNavigate();
 
     const virtualClick = async () => {
 
         const promise = new Promise((resolve) => {
             setTimeout(() => {
-                setActiveId(ids[Math.floor(Math.random() * 4)]);
+                setActiveId(ids[Math.floor(Math.random() * 4)]); // генерация ID(0-3)
             }, 1000);
             setTimeout(() => {
-                setActiveId('');
-                resolve();
+                resolve(); // тут промис завершает работу
             }, 1200);
         });
 
-        setDisabled(true);
-        await promise.then(() => {});
-        setDisabled(false);
+        setDisabled(true); // конопка заблокирована пока работает промис
+        await promise.then(() => setActiveId('')); // затираем ID активной кнопки
+        setDisabled(false); // кнопка снова активна
     };
 
     useEffect(() => {
@@ -41,13 +42,29 @@ export default function App() {
     }, [answer, sequence]);
 
     useEffect(() => {
-        virtualClick().then();
+        const aSound = require('../sounds/a.mp3');
+        const bSound = require('../sounds/b.mp3');
+        const cSound = require('../sounds/c.mp3');
+        const dSound = require('../sounds/d.mp3');
+
+        setSoundFile([aSound,bSound,cSound,dSound]);
+        setSoundFileIsLoaded(true);
     }, []);
+
+    useEffect(() => {
+        if (soundFileIsLoaded) {
+            virtualClick().then();
+        }
+    }, [soundFileIsLoaded]);
 
 
     useEffect(() => {
         setSequence((sequence) => sequence + activeId);
     }, [activeId]);
+
+    if (!soundFileIsLoaded) {
+        return <p>Loading...</p>;
+    }
 
     return (
         <div className={"app"}>
@@ -56,6 +73,7 @@ export default function App() {
                 {
                     ids.map((char, i) => {
                         return <Button
+                            soundFile={soundFile}
                             isDisabled={isDisabled}
                             answer={answer}
                             sequence={sequence}
